@@ -1,4 +1,4 @@
-from django.urls import resolve, reverse
+from django.urls import reverse
 
 
 def test_status_code(client):
