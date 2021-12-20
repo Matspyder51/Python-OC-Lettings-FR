@@ -47,9 +47,9 @@ jobs:
           name: Build Docker image
           command: |
             echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker build -t $CIRCLE_SHA1 .
-            docker tag $CIRCLE_SHA1 $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
-            docker push $DOCKERHUB_USERNAME/$oc_lettings:$CIRCLE_SHA1
+            docker build -t "$CIRCLE_SHA1" .
+            docker tag "$CIRCLE_SHA1" "$DOCKERHUB_USERNAME"/oc_lettings:"$CIRCLE_SHA1"
+            docker push "$DOCKERHUB_USERNAME"/oc_lettings:"$CIRCLE_SHA1"
   deploy:
     machine: true
     steps:
