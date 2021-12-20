@@ -46,19 +46,10 @@ jobs:
       - run:
           name: Build Docker image
           command: |
-            docker build -t $IMAGE_NAME:latest .
-  publish-docker:
-     environment:
-       IMAGE_NAME: oc-lettings
-     docker:
-      - image: circleci/buildpack-deps:stretch
-     steps:
-      - setup_remote_docker
-      - run:
-          name: Publish Docker Image to Docker Hub
-          command: |
             echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
-            docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:latest
+            docker build -t $CIRCLE_SHA1 .
+            docker tag $CIRCLE_SHA1 $DOCKERHUB_USERNAME/oc_lettings:$CIRCLE_SHA1
+            docker push $DOCKERHUB_USERNAME/$oc_lettings:$CIRCLE_SHA1
   deploy:
     machine: true
     steps:
@@ -84,16 +75,10 @@ workflows:
          filters:
             branches:
                only: master
-      - publish-docker:
-         requires:
-           - build-docker
-         filters:
-            branches:
-               only: master
       - deploy:
          requires:
            - build-and-test
-           - publish-docker
+           - build-docker
          filters:
            branches:
              only: master
